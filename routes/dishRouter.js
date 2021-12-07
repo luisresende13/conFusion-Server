@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose')
 
-Dishes = require('../models/dishes')
+const Dishes = require('../models/dishes')
 
 const dishRouter = express.Router();
 dishRouter.use(bodyParser.json());
@@ -34,13 +34,8 @@ postDishes = (req, res, next) => {
     .catch((err) => next(err));
 }
 putDishes = (req, res, next) => {
-    Dishes.remove({})
-    .then((resp) => {
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'application/json');
-        res.json(resp);
-    }, (err) => next(err))
-    .catch((err) => next(err));    
+    res.statusCode = 403;
+    res.end('PUT operation not supported on /dishes');
 }
 deleteDishes = (req, res, next) => {
     Dishes.remove({})
