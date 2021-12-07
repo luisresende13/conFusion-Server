@@ -1,16 +1,33 @@
+//Default Requirements...
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+//Default Routers...
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-
 //Custom Routers...
 var dishRouter = require('./routes/dishRouter');
 var promoRouter = require('./routes/promoRouter');
 var leaderRouter = require('./routes/leaderRouter');
+
+//Mongoose...
+const mongoose = require('mongoose');
+//Databases...
+const Dishes = require('./models/dishes')
+//Database Connection...
+const url = 'mongodb://localhost:27017/conFusion';
+const connect = mongoose.connect(url);
+//Connection Error Handler...
+connect.then((db) => {
+    console.log("Connected correctly to server");
+    //console.log(db)
+}, (err) => { console.log(err); });
+
+
+/*  ---------------- App Body ---------------------  */
 
 var app = express();
 
@@ -23,8 +40,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+//Static Router at 'public' folder...
 app.use(express.static(path.join(__dirname, 'public')));
 
+//Custom Routers...
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
@@ -36,6 +55,8 @@ app.use('/leaders',leaderRouter);
 app.use(function(req, res, next) {
   next(createError(404));
 });
+
+/*  ------------------------------------------  */
 
 // error handler
 app.use(function(err, req, res, next) {
