@@ -21,6 +21,10 @@ const mongoose = require('mongoose');
 //Databases...
 const Dishes = require('./models/dishes')
 
+//Passport...
+var passport = require('passport');
+var authenticate = require('./authenticate');
+
 /*  -------------- Mongoose Database Connection ---------------- */
 
 //Database Connection...
@@ -46,7 +50,10 @@ app.use(express.urlencoded({ extended: false }));
 
 /*  ------------- Authentication -----------------  */
 
-//app.use(cookieParser('12345-67890-09876-54321'));
+
+
+app.use(cookieParser('12345-67890-09876-54321'));
+
 app.use(session({
   name: 'session-id',
   secret: '12345-67890-09876-54321',
@@ -56,29 +63,24 @@ app.use(session({
 }));
 
 /*  ----------- Routers ---------------------------  */
+app.use(passport.initialize());
+app.use(passport.session());
 
 //Custom Routers...
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
 function auth (req, res, next) {
-    console.log(req.session);
+    console.log(req.user);
 
-  if(!req.session.user) {
+    if (!req.user) {
       var err = new Error('You are not authenticated!');
       err.status = 403;
-      return next(err);
-  }
-  else {
-    if (req.session.user === 'authenticated') {
-      next();
+      next(err);
     }
     else {
-      var err = new Error('You are not authenticated!');
-      err.status = 403;
-      return next(err);
+          next();
     }
-  }
 }
 
 app.use(auth);
