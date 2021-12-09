@@ -20,7 +20,7 @@ var leaderRouter = require('./routes/leaderRouter');
 const mongoose = require('mongoose');
 //Databases...
 const Dishes = require('./models/dishes')
-
+const User = require('./models/user')
 //Passport...
 var passport = require('passport');
 var authenticate = require('./authenticate');
@@ -93,7 +93,15 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/dishes',dishRouter);
 app.use('/promotions',promoRouter);
 app.use('/leaders',leaderRouter);
-
+app.get('/users', (req,res,next) => {
+    User.find({})
+    .then((users) => {
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json(users);
+    }, (err) => next(err))
+    .catch((err) => next(err));
+})
 
 /*  ------------------- Error Handling -----------------------  */
 
