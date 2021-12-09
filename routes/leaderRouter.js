@@ -42,14 +42,6 @@ deleteLeaders = (req, res, next) => {
     .catch((err) => next(err));    
 }
 
-/*  -------------------- Dishes Router --------------------  */
-
-leaderRouter.route('/')
-//.get(getLeaders)
-.post(authenticate.verifyUser, postLeaders)
-.put(authenticate.verifyUser, putLeaders)
-.delete(authenticate.verifyUser, deleteLeaders);
-
 /*  ------------ Dish Id Functions -----------  */
 
 getLeaderId = (req,res,next) => {
@@ -86,12 +78,18 @@ deleteLeaderId = (req, res, next) => {
     .catch((err) => next(err));
 }
 
-/* ------------- Dish Id Router --------------------  */
+/*  -------------------- Dishes Router --------------------  */
+
+leaderRouter.route('/')
+.get(getLeaders)
+.post(authenticate.verifyUser, authenticate.verifyAdmin, postLeaders)
+.put(authenticate.verifyUser, authenticate.verifyAdmin, putLeaders)
+.delete(authenticate.verifyUser, authenticate.verifyAdmin, deleteLeaders);
 
 leaderRouter.route('/:leaderId')
-//.get(getLeaderId)
-.post(authenticate.verifyUser, postLeaderId)
-.put(authenticate.verifyUser, putLeaderId)
-.delete(authenticate.verifyUser, deleteLeaderId);
+.get(getLeaderId)
+.post(authenticate.verifyUser, authenticate.verifyAdmin, postLeaderId)
+.put(authenticate.verifyUser, authenticate.verifyAdmin, putLeaderId)
+.delete(authenticate.verifyUser, authenticate.verifyAdmin, deleteLeaderId);
 
 module.exports = leaderRouter;

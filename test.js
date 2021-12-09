@@ -1,3 +1,4 @@
 const cors = require('cors')
+auth = require('./authenticate')
 
-console.log(cors().attributes)
+console.log(auth.verifyUser)

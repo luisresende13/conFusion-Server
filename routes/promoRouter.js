@@ -48,14 +48,6 @@ deletePromos = (req, res, next) => {
     .catch((err) => next(err));    
 }
 
-/*  -------------------- Dishes Router --------------------  */
-
-promoRouter.route('/')
-//.get(getPromos)
-.post(authenticate.verifyUser, postPromos)
-.put(authenticate.verifyUser, putPromos)
-.delete(authenticate.verifyUser, deletePromos);
-
 /*  ------------ Dish Id Functions -----------  */
 
 getPromoId = (req,res,next) => {
@@ -94,10 +86,16 @@ deletePromoId = (req, res, next) => {
 
 /* ------------- Dish Id Router --------------------  */
 
+promoRouter.route('/')
+.get(getPromos)
+.post(authenticate.verifyUser, authenticate.verifyAdmin, postPromos)
+.put(authenticate.verifyUser, authenticate.verifyAdmin, putPromos)
+.delete(authenticate.verifyUser, authenticate.verifyAdmin, deletePromos);
+
 promoRouter.route('/:promoId')
-//.get(getPromoId)
-.post(authenticate.verifyUser, postPromoId)
-.put(authenticate.verifyUser, putPromoId)
-.delete(authenticate.verifyUser, deletePromoId);
+.get(getPromoId)
+.post(authenticate.verifyUser, authenticate.verifyAdmin, postPromoId)
+.put(authenticate.verifyUser, authenticate.verifyAdmin, putPromoId)
+.delete(authenticate.verifyUser, authenticate.verifyAdmin, deletePromoId);
 
 module.exports = promoRouter;
