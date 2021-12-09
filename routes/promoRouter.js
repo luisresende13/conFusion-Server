@@ -6,6 +6,9 @@ const Promotions = require('../models/promotions')
 const promoRouter = express.Router();
 promoRouter.use(bodyParser.json());
 
+var authenticate = require('../authenticate');
+
+
  /*  ----------------- Methods Functions -------------------  */
 
 all_function = (req,res,next) => {
@@ -48,10 +51,10 @@ deletePromos = (req, res, next) => {
 /*  -------------------- Dishes Router --------------------  */
 
 promoRouter.route('/')
-.get(getPromos)
-.post(postPromos)
-.put(putPromos)
-.delete(deletePromos);
+//.get(getPromos)
+.post(authenticate.verifyUser, postPromos)
+.put(authenticate.verifyUser, putPromos)
+.delete(authenticate.verifyUser, deletePromos);
 
 /*  ------------ Dish Id Functions -----------  */
 
@@ -92,9 +95,9 @@ deletePromoId = (req, res, next) => {
 /* ------------- Dish Id Router --------------------  */
 
 promoRouter.route('/:promoId')
-.get(getPromoId)
-.post(postPromoId)
-.put(putPromoId)
-.delete(deletePromoId);
+//.get(getPromoId)
+.post(authenticate.verifyUser, postPromoId)
+.put(authenticate.verifyUser, putPromoId)
+.delete(authenticate.verifyUser, deletePromoId);
 
 module.exports = promoRouter;

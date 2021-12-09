@@ -24,11 +24,12 @@ const Dishes = require('./models/dishes')
 //Passport...
 var passport = require('passport');
 var authenticate = require('./authenticate');
+var config = require('./config');
 
 /*  -------------- Mongoose Database Connection ---------------- */
 
 //Database Connection...
-const url = 'mongodb://localhost:27017/conFusion';
+const url = config.mongoUrl;
 const connect = mongoose.connect(url);
 //Connection Error Handler...
 connect.then((db) => {
@@ -36,7 +37,7 @@ connect.then((db) => {
     //console.log(db)
 }, (err) => { console.log(err); });
 
-/*  ---------------- App Body ---------------------  */
+/*  ---------------- App Body Setting---------------------  */
 
 var app = express();
 
@@ -50,8 +51,6 @@ app.use(express.urlencoded({ extended: false }));
 
 /*  ------------- Authentication -----------------  */
 
-
-
 app.use(cookieParser('12345-67890-09876-54321'));
 
 app.use(session({
@@ -62,7 +61,8 @@ app.use(session({
   store: new FileStore()
 }));
 
-/*  ----------- Routers ---------------------------  */
+/*  ----------- Routers and Authentication ---------------------------  */
+
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -70,6 +70,7 @@ app.use(passport.session());
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
+/*
 function auth (req, res, next) {
     console.log(req.user);
 
@@ -84,10 +85,11 @@ function auth (req, res, next) {
 }
 
 app.use(auth);
+*/
 
 //Static Router at 'public' folder...
 app.use(express.static(path.join(__dirname, 'public')));
-
+//Database Routers...
 app.use('/dishes',dishRouter);
 app.use('/promotions',promoRouter);
 app.use('/leaders',leaderRouter);

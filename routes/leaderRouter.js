@@ -5,6 +5,9 @@ const Leaders = require('../models/leaders')
 const leaderRouter = express.Router();
 leaderRouter.use(bodyParser.json());
 
+var authenticate = require('../authenticate');
+
+
  /*  ----------------- Methods Functions -------------------  */
 
 getLeaders = (req,res,next) => {
@@ -42,10 +45,10 @@ deleteLeaders = (req, res, next) => {
 /*  -------------------- Dishes Router --------------------  */
 
 leaderRouter.route('/')
-.get(getLeaders)
-.post(postLeaders)
-.put(putLeaders)
-.delete(deleteLeaders);
+//.get(getLeaders)
+.post(authenticate.verifyUser, postLeaders)
+.put(authenticate.verifyUser, putLeaders)
+.delete(authenticate.verifyUser, deleteLeaders);
 
 /*  ------------ Dish Id Functions -----------  */
 
@@ -86,9 +89,9 @@ deleteLeaderId = (req, res, next) => {
 /* ------------- Dish Id Router --------------------  */
 
 leaderRouter.route('/:leaderId')
-.get(getLeaderId)
-.post(postLeaderId)
-.put(putLeaderId)
-.delete(deleteLeaderId);
+//.get(getLeaderId)
+.post(authenticate.verifyUser, postLeaderId)
+.put(authenticate.verifyUser, putLeaderId)
+.delete(authenticate.verifyUser, deleteLeaderId);
 
 module.exports = leaderRouter;

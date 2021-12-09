@@ -7,6 +7,8 @@ const Dishes = require('../models/dishes')
 const dishRouter = express.Router();
 dishRouter.use(bodyParser.json());
 
+var authenticate = require('../authenticate');
+
  /*  ----------------- Methods Functions -------------------  */
 
 all_function = (req,res,next) => {
@@ -88,16 +90,16 @@ deleteDishId = (req, res, next) => {
 /*  -------------------- Dishes Router --------------------  */
 
 dishRouter.route('/')
-.get(getDishes)
-.post(postDishes)
-.put(putDishes)
-.delete(deleteDishes);
+//.get(getDishes)
+.post(authenticate.verifyUser, postDishes)
+.put(authenticate.verifyUser, putDishes)
+.delete(authenticate.verifyUser, deleteDishes);
 
 dishRouter.route('/:dishId')
-.get(getDishId)
-.post(postDishId)
-.put(putDishId)
-.delete(deleteDishId);
+//.get(getDishId)
+.post(authenticate.verifyUser, postDishId)
+.put(authenticate.verifyUser, putDishId)
+.delete(authenticate.verifyUser, deleteDishId);
 
 /*  ---------------- Comments and Comment Id Routers ------------  */
 
@@ -118,7 +120,7 @@ dishRouter.route('/:dishId/comments')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.post((req, res, next) => {
+.post(authenticate.verifyUser, (req, res, next) => {
     Dishes.findById(req.params.dishId)
     .then((dish) => {
         if (dish != null) {
@@ -138,12 +140,12 @@ dishRouter.route('/:dishId/comments')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.put((req, res, next) => {
+.put(authenticate.verifyUser, (req, res, next) => {
     res.statusCode = 403;
     res.end('PUT operation not supported on /dishes/'
         + req.params.dishId + '/comments');
 })
-.delete((req, res, next) => {
+.delete(authenticate.verifyUser, (req, res, next) => {
     Dishes.findById(req.params.dishId)
     .then((dish) => {
         if (dish != null) {
@@ -188,12 +190,12 @@ dishRouter.route('/:dishId/comments/:commentId')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.post((req, res, next) => {
+.post(authenticate.verifyUser, (req, res, next) => {
     res.statusCode = 403;
     res.end('POST operation not supported on /dishes/'+ req.params.dishId
         + '/comments/' + req.params.commentId);
 })
-.put((req, res, next) => {
+.put(authenticate.verifyUser, (req, res, next) => {
     Dishes.findById(req.params.dishId)
     .then((dish) => {
         if (dish != null && dish.comments.id(req.params.commentId) != null) {
@@ -223,7 +225,7 @@ dishRouter.route('/:dishId/comments/:commentId')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.delete((req, res, next) => {
+.delete(authenticate.verifyUser, (req, res, next) => {
     Dishes.findById(req.params.dishId)
     .then((dish) => {
         if (dish != null && dish.comments.id(req.params.commentId) != null) {
