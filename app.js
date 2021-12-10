@@ -15,6 +15,7 @@ var usersRouter = require('./routes/users');
 var dishRouter = require('./routes/dishRouter');
 var promoRouter = require('./routes/promoRouter');
 var leaderRouter = require('./routes/leaderRouter');
+const uploadRouter = require('./routes/uploadRouter');
 
 //Mongoose...
 const mongoose = require('mongoose');
@@ -25,6 +26,7 @@ const User = require('./models/user')
 var passport = require('passport');
 var authenticate = require('./authenticate');
 var config = require('./config');
+
 
 /*  -------------- Mongoose Database Connection ---------------- */
 
@@ -107,15 +109,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/dishes',dishRouter);
 app.use('/promotions',promoRouter);
 app.use('/leaders',leaderRouter);
-app.get('/users', (req,res,next) => {
-    User.find({})
-    .then((users) => {
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'application/json');
-        res.json(users);
-    }, (err) => next(err))
-    .catch((err) => next(err));
-})
+app.use('/imageUpload',uploadRouter);
 
 /*  ------------------- Error Handling -----------------------  */
 
