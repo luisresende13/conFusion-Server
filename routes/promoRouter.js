@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const Promotions = require('../models/promotions')
+const cors = require('./cors');
 
 const promoRouter = express.Router();
 promoRouter.use(bodyParser.json());
@@ -87,15 +88,17 @@ deletePromoId = (req, res, next) => {
 /* ------------- Dish Id Router --------------------  */
 
 promoRouter.route('/')
-.get(getPromos)
-.post(authenticate.verifyUser, authenticate.verifyAdmin, postPromos)
-.put(authenticate.verifyUser, authenticate.verifyAdmin, putPromos)
-.delete(authenticate.verifyUser, authenticate.verifyAdmin, deletePromos);
+.options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
+.get(cors.cors, getPromos)
+.post(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, postPromos)
+.put(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, putPromos)
+.delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, deletePromos);
 
 promoRouter.route('/:promoId')
-.get(getPromoId)
-.post(authenticate.verifyUser, authenticate.verifyAdmin, postPromoId)
-.put(authenticate.verifyUser, authenticate.verifyAdmin, putPromoId)
-.delete(authenticate.verifyUser, authenticate.verifyAdmin, deletePromoId);
+.options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
+.get(cors.cors, getPromoId)
+.post(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, postPromoId)
+.put(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, putPromoId)
+.delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, deletePromoId);
 
 module.exports = promoRouter;

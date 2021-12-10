@@ -2,6 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const Leaders = require('../models/leaders')
+const cors = require('./cors');
+
 const leaderRouter = express.Router();
 leaderRouter.use(bodyParser.json());
 
@@ -81,15 +83,17 @@ deleteLeaderId = (req, res, next) => {
 /*  -------------------- Dishes Router --------------------  */
 
 leaderRouter.route('/')
-.get(getLeaders)
-.post(authenticate.verifyUser, authenticate.verifyAdmin, postLeaders)
-.put(authenticate.verifyUser, authenticate.verifyAdmin, putLeaders)
-.delete(authenticate.verifyUser, authenticate.verifyAdmin, deleteLeaders);
+.options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
+.get(cors.cors, getLeaders)
+.post(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, postLeaders)
+.put(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, putLeaders)
+.delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, deleteLeaders);
 
 leaderRouter.route('/:leaderId')
-.get(getLeaderId)
-.post(authenticate.verifyUser, authenticate.verifyAdmin, postLeaderId)
-.put(authenticate.verifyUser, authenticate.verifyAdmin, putLeaderId)
-.delete(authenticate.verifyUser, authenticate.verifyAdmin, deleteLeaderId);
+.options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
+.get(cors.cors, getLeaderId)
+.post(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, postLeaderId)
+.put(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, putLeaderId)
+.delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, deleteLeaderId);
 
 module.exports = leaderRouter;
